@@ -1,0 +1,48 @@
+md3Free / TuneFree 风格分支
+
+基础仓库：https://github.com/BrokenHT/md3Music
+基础提交：0d99847（本次修改保留原项目 AGPL-3.0 及第三方许可）
+
+构建环境
+Flutter 3.47.5 / Dart 3.13.4
+Android：JDK 22、Android SDK 36、Build Tools 36、NDK 28.2.13676358。
+Windows：Visual Studio C++ 桌面工具链与 Windows SDK 10.0.26100 或更新版本。
+
+Android arm64 标准功能版
+1. flutter pub get
+2. python -m pip install PyYAML
+3. python scripts/prepare_android_release.py
+4. 配置自己的 android/keystore.properties；签名文件不随源码分发。
+5. flutter build apk --release --flavor lite --target-platform android-arm64 --no-pub
+输出：build/app/outputs/flutter-apk/app-lite-release.apk
+lite 是本项目的标准功能 flavor，不包含完整包额外的本地 AI 模型。
+生产注册脚本用于排除 integration_test 等开发插件；运行测试前可再次 flutter pub get。
+
+Windows
+flutter pub get
+flutter build windows --release
+发布整个 Release 目录，不能仅分发 exe。
+
+静态唱片素材
+assets/images/record_sleeve_dark.png 与 record_sleeve_light.png 是程序生成的共享透明纹理。
+生成源码：test/tooling/export_record_sleeve_test.dart。
+需要重做材质时设置 MD3FREE_EXPORT_RECORD_TEXTURES=1，再运行该测试。
+翻阅过程中仅进行图片变换，不逐帧绘制唱片纹路和玻璃材质。
+
+性能取样
+lib/core/services/frame_timing_probe.dart 仅在显式传入 MD3FREE_FRAME_LOG 时启用。
+正式构建不传入该参数。F11/F12 的取样控制不会出现在正式版中。
+
+素材说明
+md3Free 应用图标：本次生成的原创简约音乐图标。
+酷狗概念版标识：用于说明音乐服务来源，商标归原权利人所有。
+来源：https://apps.apple.com/cn/app/id1480205582
+官方产品页：https://download.kugou.com/
+唱片及玻璃视觉参照用户提供的 TuneFree 项目与录屏，未复制第三方专辑封面到安装包。
+
+GitHub 发布：
+仓库：https://github.com/BrokenHT/md3Free
+发行标签：v6.3.0-r3；应用内部版本仍为 6.3.0。
+二进制沿用最终 r3 文件；应用内更新入口保留原 fork 地址，下载以本仓库 Releases 为准。
+截图说明见 docs/screenshots/README.md。
+上游工作流存放于 docs/upstream-workflows，未启用自动构建与发布。
